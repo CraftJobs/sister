@@ -17,38 +17,40 @@ app_config = None
 async def handle(path: str):
     embeds = ""
 
-    text: str = ''
-
     with open(app_config['index_path'], 'r') as f:
-        text = f.read()
+        text: str = f.read()
 
-    if path.startswith('i/') or path == '':
-        pass
-    else:
-        resp = await http.get(app_config['api'] + '/users/' + path)
-        raw = await resp.read()
-        j = resp.json()
+    try:
+        if path.startswith('i/') or path == '':
+            pass
+        else:
+            resp = await http.get(app_config['api'] + '/users/' + path)
+            j = resp.json()
 
-        success = j['success']
+            success = j['success']
 
-        embeds += title('@' + j['user']['username'] if success
-                        else 'User not found')
-        embeds += meta('og:description',
-                       '@' + j['user']['username'] + ' is on CraftJobs!'
-                       if success else 'CraftJobs')
+            embeds += title('@' + j['user']['username'] if success
+                            else 'User not found')
+            embeds += meta('og:description',
+                           '@' + j['user']['username'] + ' is on CraftJobs!'
+                           if success else 'CraftJobs')
 
-        j['target'] = path.lower()
+            j['target'] = path.lower()
 
-        text = text.replace('"sister-preload"', json.dumps(j))
+            text = text.replace('"sister-preload"', json.dumps(j))
 
-        if success:
-            embeds += meta('og:image', j['user']['avatarUrl'])
+            if success:
+                embeds += meta('og:image', j['user']['avatarUrl'])
 
-    embeds += meta('og:url', 'https://craftjobs.net/' + path)
-    embeds += meta('theme-color', '#FFAAFF')
+        embeds += meta('og:url', 'https://craftjobs.net/' + path)
+        embeds += meta('theme-color', '#FFAAFF')
 
-    text = text.replace('<sister-embeds></sister-embeds>', embeds)
-    return text
+        text = text.replace('<sister-embeds></sister-embeds>', embeds)
+        return text
+    # Panic mode to stop 500s
+    except Exception as e:
+        print(e)
+        return text
 
 
 def meta(prop: str, content: str) -> str:

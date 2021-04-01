@@ -44,7 +44,8 @@ async def handle(path: str):
 
             j['target'] = path.lower()
 
-            text = text.replace('"sister-preload"', json.dumps(j))
+            text = text.replace('"sister-preload"',
+                                json.dumps(j, separators=(',', ':')))
 
             if success:
                 embeds += meta('og:image', j['user']['avatarUrl'])
@@ -61,11 +62,11 @@ async def handle(path: str):
 
 
 def meta(prop: str, content: str) -> str:
-    return f'<meta content="{content}" property="{prop}">\n'
+    return f'<meta content="{content}" property="{prop}">'
 
 
 def title(name: str) -> str:
-    return meta('og:title', name) + f'\n<title>{name}</title>'
+    return meta('og:title', name) + f'<title>{name}</title>'
 
 
 if __name__ == '__main__':

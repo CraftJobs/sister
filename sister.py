@@ -37,7 +37,7 @@ async def handle(path: str):
                        '@' + j['user']['username'] + ' is on CraftJobs!'
                        if success else 'CraftJobs')
 
-        j['target'] = j['user']['username'].lower()
+        j['target'] = path.lower()
 
         text = text.replace('"sister-preload"', json.dumps(j))
 

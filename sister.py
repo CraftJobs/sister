@@ -36,10 +36,12 @@ async def handle(path: str):
         embeds += meta('og:description',
                        '@' + j['user']['username'] + ' is on CraftJobs!'
                        if success else 'CraftJobs')
-        text = text.replace('"sister-preload"', raw.decode('utf-8'))
+
+        j['target'] = j['user']['username'].lower()
+
+        text = text.replace('"sister-preload"', json.dumps(j))
 
         if success:
-            print(j['user'])
             embeds += meta('og:image', j['user']['avatarUrl'])
 
     embeds += meta('og:url', 'https://craftjobs.net/' + path)

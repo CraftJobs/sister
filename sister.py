@@ -14,6 +14,7 @@ app_config = None
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 async def handle(path: str):
+    request: quart.Request = quart.request
     embeds = ""
 
     with open(app_config['index_path'], 'r') as f:
@@ -24,7 +25,13 @@ async def handle(path: str):
             pass
         else:
             async with AsyncClient() as http:
-                resp = await http.get(app_config['api'] + '/users/' + path)
+                headers = {}
+
+                if 'sistoken' in request.cookies:
+                    headers['Authorization'] = request.cookies.get('sistoken')
+
+                resp = await http.get(app_config['api'] + '/users/' + path,
+                                      headers=headers)
             j = resp.json()
 
             success = j['success']

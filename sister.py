@@ -8,7 +8,6 @@ from http3 import AsyncClient
 from hypercorn.asyncio import serve, Config
 
 app = quart.Quart(__name__)
-http = AsyncClient()
 app_config = None
 
 
@@ -24,7 +23,8 @@ async def handle(path: str):
         if path.startswith('i/') or path == '':
             pass
         else:
-            resp = await http.get(app_config['api'] + '/users/' + path)
+            async with AsyncClient() as http:
+                resp = await http.get(app_config['api'] + '/users/' + path)
             j = resp.json()
 
             success = j['success']

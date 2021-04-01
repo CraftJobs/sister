@@ -50,7 +50,7 @@ async def handle(path: str):
 
 
 def meta(prop: str, content: str) -> str:
-    return f'<meta content="{prop}" property="{content}">\n'
+    return f'<meta content="{content}" property="{prop}">\n'
 
 
 def title(name: str) -> str:
